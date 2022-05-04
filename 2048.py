@@ -265,7 +265,7 @@ def goUp():
             nt += 1
             score += board[1][i]
         if board[2][i] == board[3][i] and board[2][i] != 0:
-            board[2][i] = board[3][i]
+            board[2][i] *= 2
             board[3][i] = 0
             nt += 1
             score += board[2][i]
@@ -323,7 +323,7 @@ def goDown():
             nt += 1
             score += board[2][i]
         if board[1][i] == board[0][i] and board[1][i] != 0:
-            board[1][i] = board[0][i]
+            board[1][i] *= 2
             board[0][i] = 0
             nt += 1
             score += board[1][i]
@@ -381,7 +381,7 @@ def goLeft():
             nt += 1
             score += board[i][1]
         if board[i][2] == board[i][3] and board[i][2] != 0:
-            board[i][2] = board[i][3]
+            board[i][2] *= 2
             board[i][3] = 0
             nt += 1
             score += board[i][2]
@@ -439,7 +439,7 @@ def goRight():
             nt += 1
             score += board[i][2]
         if board[i][1] == board[i][0] and board[i][1] != 0:
-            board[i][1] = board[i][0]
+            board[i][1] *= 2
             board[i][0] = 0
             nt += 1
             score += board[i][1]
