@@ -2,6 +2,7 @@ import turtle
 import random
 board = [[], [], [], []]
 av = []
+h = 0
 if True:
     scr = turtle.Screen()._root
     scr.iconbitmap("2048/2048.ico")
@@ -111,7 +112,7 @@ if True:
     scr.bgcolor("#F1BB35")
 def updateFromTXT():
     global board, av, score, hs, started, updateIcons
-    lines = (open("2048/board.txt").read()).split(" ")
+    lines = open("2048/board.txt").read().split(" ")
     started = int(lines[0])
     x = 1
     for i in range(4):
@@ -128,10 +129,11 @@ def updateFromTXT():
                 av.append(x)
                 x += 1
 def resetGame():
-    global hs
+    global hs, updateFromTXT
     f = open("2048/board.txt", "w")
-    m = "0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 " + str(hs)
-    f.write(m)
+    f.write("0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 " + str(hs))
+    f.close()
+    updateFromTXT()
 def updateTXT():
     global started, board, score, hs
     f = open("2048/board.txt", "w")
@@ -192,7 +194,8 @@ def lose():
     turtle.write("Press space to close, and re-run the file to play again!", align = "center", font = ["Arial", 10, "normal"])
     resetGame()
 def placeRandomTile():
-    global av, board, lose
+    global av, board, lose, updateAV
+    updateAV()
     m = -1
     if len(av) == 0:
         lose()
@@ -214,253 +217,106 @@ def placeRandomTile():
 def die():
     global scr
     scr.bye()
+def updateAV():
+    global av, board
+    av = []
+    x = 0
+    for i in range(4):
+        for o in range(4):
+            if board[i][o] == 0:
+                av.append(x)
+                x += 1
 def defaultOnMove():
     global updateTXT, placeRandomTile, started, updateIcons
     placeRandomTile()
     started = 1
     updateTXT()
     updateIcons()
+def checks(t0, t1, t2, t3, t4, t5, t6, t7):
+    global board, score, defaultOnMove
+    nt = 0
+    if board[t1][t5] != 0:
+        if board[t0][t4] == 0:
+            board[t0][t4] = board[t1][t5]
+            board[t1][t5] = 0
+            nt += 1
+    if board[t2][t6] != 0:
+        if board[t0][t4] == 0:
+            board[t0][t4] = board[t2][t6]
+            board[t2][t6] = 0
+            nt += 1
+        elif board[t1][t5] == 0:
+            board[t1][t5] = board[t2][t6]
+            board[t2][t6] = 0
+            nt += 1
+    if board[t3][t7] != 0:
+        if board[t0][t4] == 0:
+            board[t0][t4] = board[t3][t7]
+            board[t3][t7] = 0
+            nt += 1
+        elif board[t1][t5] == 0:
+            board[t1][t5] = board[t3][t7]
+            board[t3][t7] = 0
+            nt += 1
+        elif board[t2][t6] == 0:
+            board[t2][t6] = board[t3][t7]
+            board[t3][t7] = 0
+            nt += 1
+    if board[t0][t4] == board[t1][t5] and board[t0][t4] != 0:
+        board[t0][t4] *= 2
+        board[t1][t5] = board[t2][t6]
+        board[t2][t6] = board[t3][t7]
+        board[t3][t7] = 0
+        nt += 1
+        score += board[t0][t4]
+    if board[t1][t5] == board[t2][t6] and board[t1][t5] != 0:
+        board[t1][t5] *= 2
+        board[t2][t6] = board[t3][t7]
+        board[t3][t7] = 0
+        nt += 1
+        score += board[t1][t5]
+    if board[t2][t6] == board[t3][t7] and board[t2][t6] != 0:
+        board[t2][t6] *= 2
+        board[t3][t7] = 0
+        nt += 1
+        score += board[t2][t6]
+    if t0 == 3 or t4 == 3:
+        if nt != 0:
+            defaultOnMove()
 def goUp():
-    global board, av, defaultOnMove, score
-    nt = 0
+    global checks
     for i in range(4):
-        if board[1][i] != 0:
-            if board[0][i] == 0:
-                board[0][i] = board[1][i]
-                board[1][i] = 0
-                nt += 1
-        if board[2][i] != 0:
-            if board[0][i] == 0:
-                board[0][i] = board[2][i]
-                board[2][i] = 0
-                nt += 1
-            elif board[1][i] == 0:
-                board[1][i] = board[2][i]
-                board[2][i] = 0
-                nt += 1
-        if board[3][i] != 0:
-            if board[0][i] == 0:
-                board[0][i] = board[3][i]
-                board[3][i] = 0
-                nt += 1
-            elif board[1][i] == 0:
-                board[1][i] = board[3][i]
-                board[3][i] = 0
-                nt += 1
-            elif board[2][i] == 0:
-                board[2][i] = board[3][i]
-                board[3][i] = 0
-                nt += 1
-        if board[0][i] == board[1][i] and board[0][i] != 0:
-            board[0][i] *= 2
-            board[1][i] = board[2][i]
-            board[2][i] = board[3][i]
-            board[3][i] = 0
-            nt += 1
-            score += board[0][i]
-        if board[1][i] == board[2][i] and board[1][i] != 0:
-            board[1][i] *= 2
-            board[2][i] = board[3][i]
-            board[3][i] = 0
-            nt += 1
-            score += board[1][i]
-        if board[2][i] == board[3][i] and board[2][i] != 0:
-            board[2][i] *= 2
-            board[3][i] = 0
-            nt += 1
-            score += board[2][i]
-    if nt != 0:
-        defaultOnMove()
-    av = []
-    x = 0
-    for i in range(4):
-        for o in range(4):
-            if board[i][o] == 0:
-                av.append(x)
-                x += 1
+        checks(0, 1, 2, 3, i, i, i, i)
 def goDown():
-    global board, av, defaultOnMove, score
-    nt = 0
+    global checks
     for i in range(4):
-        if board[2][i] != 0:
-            if board[3][i] == 0:
-                board[3][i] = board[2][i]
-                board[2][i] = 0
-                nt += 1
-        if board[1][i] != 0:
-            if board[3][i] == 0:
-                board[3][i] = board[1][i]
-                board[1][i] = 0
-                nt += 1
-            elif board[2][i] == 0:
-                board[2][i] = board[1][i]
-                board[1][i] = 0
-                nt += 1
-        if board[0][i] != 0:
-            if board[3][i] == 0:
-                board[3][i] = board[0][i]
-                board[0][i] = 0
-                nt += 1
-            elif board[2][i] == 0:
-                board[2][i] = board[0][i]
-                board[0][i] = 0
-                nt += 1
-            elif board[1][i] == 0:
-                board[1][i] = board[0][i]
-                board[0][i] = 0
-                nt += 1
-        if board[3][i] == board[2][i] and board[3][i] != 0:
-            board[3][i] *= 2
-            board[2][i] = board[1][i]
-            board[1][i] = board[0][i]
-            board[0][i] = 0
-            nt += 1
-            score += board[3][i]
-        if board[2][i] == board[1][i] and board[2][i] != 0:
-            board[2][i] *= 2
-            board[1][i] = board[0][i]
-            board[0][i] = 0
-            nt += 1
-            score += board[2][i]
-        if board[1][i] == board[0][i] and board[1][i] != 0:
-            board[1][i] *= 2
-            board[0][i] = 0
-            nt += 1
-            score += board[1][i]
-    if nt != 0:
-        defaultOnMove()
-    av = []
-    x = 0
-    for i in range(4):
-        for o in range(4):
-            if board[i][o] == 0:
-                av.append(x)
-                x += 1
+        checks(3, 2, 1, 0, i, i, i, i)
 def goLeft():
-    global board, av, defaultOnMove, score
-    nt = 0
+    global checks
     for i in range(4):
-        if board[i][1] != 0:
-            if board[i][0] == 0:
-                board[i][0] = board[i][1]
-                board[i][1] = 0
-                nt += 1
-        if board[i][2] != 0:
-            if board[i][0] == 0:
-                board[i][0] = board[i][2]
-                board[i][2] = 0
-                nt += 1
-            elif board[i][1] == 0:
-                board[i][1] = board[i][2]
-                board[i][2] = 0
-                nt += 1
-        if board[i][3] != 0:
-            if board[i][0] == 0:
-                board[i][0] = board[i][3]
-                board[i][3] = 0
-                nt += 1
-            elif board[i][1] == 0:
-                board[i][1] = board[i][3]
-                board[i][3] = 0
-                nt += 1
-            elif board[i][2] == 0:
-                board[i][2] = board[i][3]
-                board[i][3] = 0
-                nt += 1
-        if board[i][0] == board[i][1] and board[i][0] != 0:
-            board[i][0] *= 2
-            board[i][1] = board[i][2]
-            board[i][2] = board[i][3]
-            board[i][3] = 0
-            nt += 1
-            score += board[i][0]
-        if board[i][1] == board[i][2] and board[i][1] != 0:
-            board[i][1] *= 2
-            board[i][2] = board[i][3]
-            board[i][3] = 0
-            nt += 1
-            score += board[i][1]
-        if board[i][2] == board[i][3] and board[i][2] != 0:
-            board[i][2] *= 2
-            board[i][3] = 0
-            nt += 1
-            score += board[i][2]
-    if nt != 0:
-        defaultOnMove()
-    av = []
-    x = 0
-    for i in range(4):
-        for o in range(4):
-            if board[i][o] == 0:
-                av.append(x)
-                x += 1
+        checks(i, i, i, i, 0, 1, 2, 3)
 def goRight():
-    global board, av, defaultOnMove, score
+    global score
     nt = 0
     for i in range(4):
-        if board[i][2] != 0:
-            if board[i][3] == 0:
-                board[i][3] = board[i][2]
-                board[i][2] = 0
-                nt += 1
-        if board[i][1] != 0:
-            if board[i][3] == 0:
-                board[i][3] = board[i][1]
-                board[i][1] = 0
-                nt += 1
-            elif board[i][2] == 0:
-                board[i][2] = board[i][1]
-                board[i][1] = 0
-                nt += 1
-        if board[i][0] != 0:
-            if board[i][3] == 0:
-                board[i][3] = board[i][0]
-                board[i][0] = 0
-                nt += 1
-            elif board[i][2] == 0:
-                board[i][2] = board[i][0]
-                board[i][0] = 0
-                nt += 1
-            elif board[i][1] == 0:
-                board[i][1] = board[i][0]
-                board[i][0] = 0
-                nt += 1
-        if board[i][3] == board[i][2] and board[i][3] != 0:
-            board[i][3] *= 2
-            board[i][2] = board[i][1]
-            board[i][1] = board[i][0]
-            board[i][0] = 0
-            nt += 1
-            score += board[i][3]
-        if board[i][2] == board[i][1] and board[i][2] != 0:
-            board[i][2] *= 2
-            board[i][1] = board[i][0]
-            board[i][0] = 0
-            nt += 1
-            score += board[i][2]
-        if board[i][1] == board[i][0] and board[i][1] != 0:
-            board[i][1] *= 2
-            board[i][0] = 0
-            nt += 1
-            score += board[i][1]
-    if nt != 0:
-        defaultOnMove()
-    av = []
-    x = 0
-    for i in range(4):
-        for o in range(4):
-            if board[i][o] == 0:
-                av.append(x)
-                x += 1
+        checks(i, i, i, i, 3, 2, 1, 0)
+def newGame():
+    global placeRandomTile
+    placeRandomTile()
+    placeRandomTile()
 scr.onkey(goUp, "Up")
 scr.onkey(goDown, "Down")
 scr.onkey(goLeft, "Left")
 scr.onkey(goRight, "Right")
+scr.onkey(goUp, "w")
+scr.onkey(goDown, "s")
+scr.onkey(goRight, "a")
+scr.onkey(goLeft, "d")
+scr.onkey(resetGame, "r")
 scr.onkey(die, "space")
 scr.listen()
 updateFromTXT()
 if started == 0:
-    placeRandomTile()
-    placeRandomTile()
+    newGame()
 updateIcons()
 scr.mainloop()
