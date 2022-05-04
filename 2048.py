@@ -3,6 +3,7 @@ import random
 board = [[], [], [], []]
 av = []
 h = 0
+nt = 0
 if True:
     scr = turtle.Screen()._root
     scr.iconbitmap("2048/2048.ico")
@@ -233,7 +234,7 @@ def defaultOnMove():
     updateTXT()
     updateIcons()
 def checks(t0, t1, t2, t3, t4, t5, t6, t7):
-    global board, score, defaultOnMove
+    global board, score, defaultOnMove, nt
     nt = 0
     if board[t1][t5] != 0:
         if board[t0][t4] == 0:
@@ -280,26 +281,31 @@ def checks(t0, t1, t2, t3, t4, t5, t6, t7):
         board[t3][t7] = 0
         nt += 1
         score += board[t2][t6]
-    if t0 == 3 or t4 == 3:
-        if nt != 0:
-            defaultOnMove()
 def goUp():
-    global checks
+    global checks, nt
     for i in range(4):
         checks(0, 1, 2, 3, i, i, i, i)
+    if nt != 0:
+        defaultOnMove()
 def goDown():
-    global checks
+    global checks, nt
     for i in range(4):
         checks(3, 2, 1, 0, i, i, i, i)
+    if nt != 0:
+        defaultOnMove()
 def goLeft():
-    global checks
+    global checks, nt
     for i in range(4):
         checks(i, i, i, i, 0, 1, 2, 3)
+    if nt != 0:
+        defaultOnMove()
 def goRight():
-    global score
+    global checks, nt
     nt = 0
     for i in range(4):
         checks(i, i, i, i, 3, 2, 1, 0)
+    if nt != 0:
+        defaultOnMove()
 def newGame():
     global placeRandomTile
     placeRandomTile()
@@ -310,8 +316,8 @@ scr.onkey(goLeft, "Left")
 scr.onkey(goRight, "Right")
 scr.onkey(goUp, "w")
 scr.onkey(goDown, "s")
-scr.onkey(goRight, "a")
-scr.onkey(goLeft, "d")
+scr.onkey(goRight, "d")
+scr.onkey(goLeft, "a")
 scr.onkey(die, "space")
 scr.listen()
 updateFromTXT()
