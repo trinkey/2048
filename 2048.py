@@ -234,7 +234,6 @@ def defaultOnMove():
     updateTXT()
 def checks(t0, t1, t2, t3, t4, t5, t6, t7):
     global board, score, defaultOnMove, nt
-    nt = 0
     if board[t1][t5] != 0:
         if board[t0][t4] == 0:
             board[t0][t4] = board[t1][t5]
@@ -282,6 +281,7 @@ def checks(t0, t1, t2, t3, t4, t5, t6, t7):
         score += board[t2][t6]
 def goUp():
     global checks, nt, updateIcons
+    nt = 0
     for i in range(4):
         checks(0, 1, 2, 3, i, i, i, i)
     if nt != 0:
@@ -289,6 +289,7 @@ def goUp():
     updateIcons()
 def goDown():
     global checks, nt
+    nt = 0
     for i in range(4):
         checks(3, 2, 1, 0, i, i, i, i)
     if nt != 0:
@@ -296,6 +297,7 @@ def goDown():
     updateIcons()
 def goLeft():
     global checks, nt
+    nt = 0
     for i in range(4):
         checks(i, i, i, i, 0, 1, 2, 3)
     if nt != 0:
@@ -303,6 +305,7 @@ def goLeft():
     updateIcons()
 def goRight():
     global checks, nt
+    nt = 0
     nt = 0
     for i in range(4):
         checks(i, i, i, i, 3, 2, 1, 0)
