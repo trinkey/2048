@@ -130,11 +130,14 @@ def updateFromTXT():
                 av.append(x)
                 x += 1
 def resetGame():
-    global hs, updateFromTXT
+    global hs, updateFromTXT, newGame, board, updateIcons
     f = open("2048/board.txt", "w")
-    f.write("0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 " + str(hs))
+    f.write("0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 " + str(hs))
     f.close()
+    board = [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]]
     updateFromTXT()
+    newGame()
+    updateIcons()
 def updateTXT():
     global started, board, score, hs
     f = open("2048/board.txt", "w")
@@ -324,6 +327,7 @@ scr.onkey(goUp, "w")
 scr.onkey(goDown, "s")
 scr.onkey(goRight, "d")
 scr.onkey(goLeft, "a")
+scr.onkey(resetGame, "r")
 scr.onkey(die, "space")
 scr.listen()
 updateFromTXT()
