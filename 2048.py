@@ -192,7 +192,7 @@ def lose():
     turtle.write("Press space to close, and re-run the file to play again!", align = "center", font = ["Arial", 10, "normal"])
     resetGame()
 def placeRandomTile():
-    global av, board, updateIcons, lose
+    global av, board, lose
     m = -1
     if len(av) == 0:
         lose()
@@ -211,15 +211,15 @@ def placeRandomTile():
             board[2][m - 8] = p
         else:
             board[3][m - 12] = p
-        updateIcons()
 def die():
     global scr
     scr.bye()
 def defaultOnMove():
-    global updateTXT, placeRandomTile, started
+    global updateTXT, placeRandomTile, started, updateIcons
     placeRandomTile()
     started = 1
     updateTXT()
+    updateIcons()
 def goUp():
     global board, av, defaultOnMove, score
     nt = 0
@@ -462,4 +462,5 @@ updateFromTXT()
 if started == 0:
     placeRandomTile()
     placeRandomTile()
+updateIcons()
 scr.mainloop()
