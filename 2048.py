@@ -232,7 +232,6 @@ def defaultOnMove():
     placeRandomTile()
     started = 1
     updateTXT()
-    updateIcons()
 def checks(t0, t1, t2, t3, t4, t5, t6, t7):
     global board, score, defaultOnMove, nt
     nt = 0
@@ -282,23 +281,26 @@ def checks(t0, t1, t2, t3, t4, t5, t6, t7):
         nt += 1
         score += board[t2][t6]
 def goUp():
-    global checks, nt
+    global checks, nt, updateIcons
     for i in range(4):
         checks(0, 1, 2, 3, i, i, i, i)
     if nt != 0:
         defaultOnMove()
+    updateIcons()
 def goDown():
     global checks, nt
     for i in range(4):
         checks(3, 2, 1, 0, i, i, i, i)
     if nt != 0:
         defaultOnMove()
+    updateIcons()
 def goLeft():
     global checks, nt
     for i in range(4):
         checks(i, i, i, i, 0, 1, 2, 3)
     if nt != 0:
         defaultOnMove()
+    updateIcons()
 def goRight():
     global checks, nt
     nt = 0
@@ -306,6 +308,7 @@ def goRight():
         checks(i, i, i, i, 3, 2, 1, 0)
     if nt != 0:
         defaultOnMove()
+    updateIcons()
 def newGame():
     global placeRandomTile
     placeRandomTile()
